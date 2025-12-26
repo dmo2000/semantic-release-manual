@@ -1,0 +1,35 @@
+trigger: none
+
+parameters:
+  - name: majorVersion
+    displayName: "Major version"
+    type: string
+    default: ""
+  - name: minorVersion
+    displayName: "Minor version"
+    type: string
+    default: ""
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+    persistCredentials: true
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '20.x'
+
+  - script: |
+      npm ci
+    displayName: Install dependencies
+
+  - script: |
+      npx semantic-release
+    displayName: Run semantic-release forcing version to ${{ parameters.majorVersion }}.${{ parameters.minorVersion }}.0
+    env:
+      SEMANTIC_RELEASE_PIPELINE_BUMP: "true"
+      SEMANTIC_RELEASE_MAJOR_VERSION: ${{ parameters.majorVersion }}
+      SEMANTIC_RELEASE_MINOR_VERSION: ${{ parameters.minorVersion }}
+      GITHUB_TOKEN: $(GITHUB_TOKEN)

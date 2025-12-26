@@ -1,0 +1,12 @@
+{
+  "name": "sample-semantic-release-devops",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "release": "semantic-release"
+  },
+  "devDependencies": {
+    "semantic-release": "^23.0.0",
+    "semver": "^7.6.0"
+  }
+}
