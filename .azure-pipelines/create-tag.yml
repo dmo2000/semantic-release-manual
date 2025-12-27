@@ -17,32 +17,38 @@ parameters:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-  - checkout: self
-    persistCredentials: true
+jobs:
+- job: approval
+  pool: server
+  condition: ne('${{ parameters.bumpType }}', 'patch')
+  steps:
+    - task: ManualValidation@1
+      displayName: 'Require manual approval before tagging/publishing'
+      inputs:
+        instructions: |
+          Review the pending release and approve to continue.
+          Bump type: ${{ parameters.bumpType }}
+          Bump number: ${{ parameters.bumpNumber }}
+        timeoutInMinutes: 10
+        onTimeout: reject
+- job: create_tag
+  dependsOn: approval
+  steps:
+    - checkout: self
+      persistCredentials: true
 
-  - task: ManualValidation@1
-    displayName: 'Require manual approval before tagging/publishing'
-    inputs:
-      instructions: |
-        Review the pending release and approve to continue.
-        Bump type: ${{ parameters.bumpType }}, bump number: ${{ parameters.bumpNumber }}.
-      onTimeout: 'reject'
-      timeout: '10'
-    condition: and(succeeded(), ne(parameters['bumpType'], 'patch'))
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.x'
 
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '20.x'
+    - script: |
+        npm ci
+      displayName: Install dependencies
 
-  - script: |
-      npm ci
-    displayName: Install dependencies
-
-  - script: |
-      npx semantic-release
-    displayName: Run semantic-release setting ${{ parameters.bumpType }} version to ${{ parameters.bumpNumber }}
-    env:
-      SEMANTIC_RELEASE_BUMP_TYPE: ${{ parameters.bumpType }}
-      SEMANTIC_RELEASE_BUMP_NUMBER: ${{ parameters.bumpNumber }}
-      GITHUB_TOKEN: $(GITHUB_TOKEN)
+    - script: |
+        npx semantic-release
+      displayName: Run semantic-release setting ${{ parameters.bumpType }} version to ${{ parameters.bumpNumber }}
+      env:
+        SEMANTIC_RELEASE_BUMP_TYPE: ${{ parameters.bumpType }}
+        SEMANTIC_RELEASE_BUMP_NUMBER: ${{ parameters.bumpNumber }}
+        GITHUB_TOKEN: $(GITHUB_TOKEN)
