@@ -18,7 +18,7 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-  - task: ManualValidation@0
+  - task: ManualValidation@1
     displayName: 'Require manual approval before tagging/publishing'
     inputs:
       instructions: |
