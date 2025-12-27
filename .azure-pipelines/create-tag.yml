@@ -20,7 +20,6 @@ pool:
 jobs:
 - job: approval
   pool: server
-  condition: ne('${{ parameters.bumpType }}', 'patch')
   steps:
     - task: ManualValidation@1
       displayName: 'Require manual approval before tagging/publishing minor/major release'
@@ -31,6 +30,7 @@ jobs:
           Bump number: ${{ parameters.bumpNumber }}
         timeoutInMinutes: 10
         onTimeout: reject
+      condition: ne('${{ parameters.bumpType }}', 'patch')
 - job: create_tag
   dependsOn: approval
   steps:
