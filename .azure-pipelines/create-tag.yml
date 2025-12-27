@@ -26,6 +26,7 @@ steps:
         Bump type: ${{ parameters.bumpType }}, bump number: ${{ parameters.bumpNumber }}.
       onTimeout: 'reject'
       timeout: '10'
+    condition: and(succeeded(), ne(parameters['bumpType'], 'patch'))
   - checkout: self
     persistCredentials: true
 
