@@ -23,7 +23,7 @@ jobs:
   condition: ne('${{ parameters.bumpType }}', 'patch')
   steps:
     - task: ManualValidation@1
-      displayName: 'Require manual approval before tagging/publishing'
+      displayName: 'Require manual approval before tagging/publishing minor/major release'
       inputs:
         instructions: |
           Review the pending release and approve to continue.
