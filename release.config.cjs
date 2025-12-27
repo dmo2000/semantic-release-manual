@@ -11,7 +11,7 @@ module.exports = {
       ] }],
     ['@semantic-release/release-notes-generator', { preset: 'angular' }],
     ['@semantic-release/changelog', { changelogFile: 'CHANGELOG.md' }],
-    './tools/verify-release.js'
+    './verify-release.js'
   ],
   verifyConditions: [
   ],
