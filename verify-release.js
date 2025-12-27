@@ -26,8 +26,8 @@ module.exports = {
           throw new Error(`Version verification failed: expected major version ${bumpNumber}, got ${actualMajor}`);
         }
         if (bumpType == 'minor' && actualMinor != bumpNumber) {
-          logger.error(`Minor version mismatch: expected ${bumpNumber} but will publish ${actualMajor}`);
-          throw new Error(`Version verification failed: expected minor version ${bumpNumber}, got ${actualMajor}`);
+          logger.error(`Minor version mismatch: expected ${bumpNumber} but will publish ${actualMinor}`);
+          throw new Error(`Version verification failed: expected minor version ${bumpNumber}, got ${actualMinor}`);
         }
         logger.log(`Version verification passed: ${actual}`);
       }
