@@ -6,9 +6,9 @@ parameters:
     type: string
     default: "patch"
     values:
-      - patch
-      - minor
       - major
+      - minor
+      - patch
   - name: bumpNumber
     displayName: "Bump number"
     type: string
