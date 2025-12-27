@@ -1,0 +1,38 @@
+trigger: none
+
+parameters:
+  - name: bumpType
+    displayName: "bump type"
+    type: string
+    default: "patch"
+    options:
+      - patch
+      - minor
+      - major
+  - name: bumpNumber
+    displayName: "Bump number"
+    type: string
+    default: ""
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+    persistCredentials: true
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '20.x'
+
+  - script: |
+      npm ci
+    displayName: Install dependencies
+
+  - script: |
+      npx semantic-release
+    displayName: Run semantic-release setting ${{ parameters.bumpType }} version to ${{ parameters.bumpNumber }}
+    env:
+      SEMANTIC_RELEASE_BUMP_TYPE: ${{ parameters.bumpType }}
+      SEMANTIC_RELEASE_BUMP_NUMBER: ${{ parameters.bumpNumber }}
+      GITHUB_TOKEN: $(GITHUB_TOKEN)
