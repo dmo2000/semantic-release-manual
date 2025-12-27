@@ -12,7 +12,7 @@ parameters:
   - name: bumpNumber
     displayName: "Bump number"
     type: string
-    default: ""
+    default: "0"
 
 pool:
   vmImage: ubuntu-latest
