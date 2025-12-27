@@ -18,6 +18,9 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+  - checkout: self
+    persistCredentials: true
+
   - task: ManualValidation@1
     displayName: 'Require manual approval before tagging/publishing'
     inputs:
@@ -27,8 +30,6 @@ steps:
       onTimeout: 'reject'
       timeout: '10'
     condition: and(succeeded(), ne(parameters['bumpType'], 'patch'))
-  - checkout: self
-    persistCredentials: true
 
   - task: NodeTool@0
     inputs:
