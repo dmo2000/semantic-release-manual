@@ -5,7 +5,7 @@ parameters:
     displayName: "bump type"
     type: string
     default: "patch"
-    options:
+    values:
       - patch
       - minor
       - major
