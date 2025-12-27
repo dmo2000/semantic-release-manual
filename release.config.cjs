@@ -12,7 +12,7 @@ const verifyRelease = {
           return;
         }
         const actual = nextRelease && nextRelease.version;
-        const match = actual.match(/^v(\d+)\.(\d+)\.\d+$/);
+        const match = actual.match(/^(\d+)\.(\d+)\.\d+$/);
 
         if (!match) {
           throw new Error(`Invalid tag format: ${lastRelease}`);
