@@ -3,6 +3,7 @@ const verifyRelease = {
         const { lastRelease = {}, nextRelease = {}, logger = console } = context;
         const bumpType = process.env.SEMANTIC_RELEASE_BUMP_TYPE;
         const bumpNumber = process.env.SEMANTIC_RELEASE_BUMP_NUMBER;
+        logger.log('Verifying expected release.');
         if (!bumpType) {
           logger.log('SEMANTIC_RELEASE_BUMP_TYPE not set — skipping version verification.');
           return;
