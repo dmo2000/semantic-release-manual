@@ -18,6 +18,14 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+  - task: ManualValidation@0
+    displayName: 'Require manual approval before tagging/publishing'
+    inputs:
+      instructions: |
+        Review the pending release and approve to continue.
+        Bump type: ${{ parameters.bumpType }}, bump number: ${{ parameters.bumpNumber }}.
+      onTimeout: 'reject'
+      timeout: '10'
   - checkout: self
     persistCredentials: true
 
