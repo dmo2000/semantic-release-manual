@@ -21,7 +21,7 @@ steps:
   - script: |
       export VERSION=$(git describe --tags)
       echo "##vso[build.updatebuildnumber]${VERSION}"
-    displayName: "Build Go binary"
+    displayName: "Set build number"
 
   - task: GoTool@0
     inputs:
