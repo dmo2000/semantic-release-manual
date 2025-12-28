@@ -18,6 +18,11 @@ steps:
     fetchTags: true
     fetchDepth: 0
 
+  - script: |
+      export VERSION=$(git describe --tags)
+      echo "##vso[build.updatebuildnumber]${VERSION}"
+    displayName: "Build Go binary"
+
   - task: GoTool@0
     inputs:
       version: "1.25"
@@ -28,9 +33,8 @@ steps:
     displayName: "Build Go binary"
 
   - script: |
-      export VERSION=$(git describe --tags)
       cd $(buildDir)
-      zip $(appName)-${VERSION}.zip $(appName)
+      zip $(appName)-$(Build.BuildNumber).zip $(appName)
     displayName: "Create ZIP with version"
 
   - task: PublishBuildArtifacts@1
