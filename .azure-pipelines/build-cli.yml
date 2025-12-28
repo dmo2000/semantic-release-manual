@@ -28,7 +28,7 @@ steps:
   - script: |
       export VERSION=$(git describe --tags)
       cd $(buildDir)
-      zip $(appName)-${VERSION}.zip $(appName)
+      zip $(appName)-$(git describe --tags).zip $(appName)
     displayName: "Create ZIP with version"
 
   - task: PublishBuildArtifacts@1
