@@ -1,0 +1,38 @@
+trigger:
+  branches:
+    include:
+      - main
+  tags:
+    include:
+      - "v*"
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  appName: hello-world
+  buildDir: build
+
+steps:
+  - checkout: self
+
+  - task: GoTool@0
+    inputs:
+      version: "1.25.x"
+
+  - script: |
+      mkdir -p $(buildDir)
+      go build -o $(buildDir)/$(appName) ./cmd
+    displayName: "Build Go binary"
+
+  - script: |
+      version=$(git describe --tags --abbrev=0)
+      cd $(buildDir)
+      zip $(appName)-${version}.zip $(appName)
+    displayName: "Create ZIP with version"
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: "$(buildDir)/$(appName)-${{ parameters.version }}.zip"
+      ArtifactName: "release"
+      publishLocation: "Container"
