@@ -33,6 +33,6 @@ steps:
 
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: "$(buildDir)/$(appName)-${{ parameters.version }}.zip"
+      PathtoPublish: "$(buildDir)"
       ArtifactName: "release"
       publishLocation: "Container"
