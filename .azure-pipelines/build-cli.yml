@@ -26,9 +26,10 @@ steps:
     displayName: "Build Go binary"
 
   - script: |
+      git describe tags
       export VERSION=$(git describe --tags)
       cd $(buildDir)
-      zip $(appName)-$(git describe --tags).zip $(appName)
+      zip $(appName)-${VERSION}.zip $(appName)
     displayName: "Create ZIP with version"
 
   - task: PublishBuildArtifacts@1
