@@ -8,16 +8,37 @@
 const https = require('https');
 
 // Get repository information from environment or package.json
-const REPO_OWNER = process.env.GITHUB_REPOSITORY_OWNER || 'dmo2000';
-const REPO_NAME = process.env.GITHUB_REPOSITORY_NAME || 'semantic-release-manual';
+function getRepoInfo() {
+  const owner = process.env.GITHUB_REPOSITORY_OWNER;
+  const name = process.env.GITHUB_REPOSITORY_NAME;
+  
+  if (!owner || !name) {
+    // Try to read from package.json
+    try {
+      const pkg = require('./package.json');
+      const repoUrl = pkg.repository?.url || '';
+      const match = repoUrl.match(/github\.com[:/]([^/]+)\/([^/.]+)/);
+      if (match) {
+        return { owner: match[1], name: match[2] };
+      }
+    } catch (e) {
+      // package.json not found or invalid
+    }
+    
+    throw new Error('Repository information not found. Set GITHUB_REPOSITORY_OWNER and GITHUB_REPOSITORY_NAME environment variables.');
+  }
+  
+  return { owner, name };
+}
+
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const TEST_MODE = process.env.TEST_MODE === 'true';
 
-function checkOpenPRs() {
+function checkOpenPRs(owner, name) {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: 'api.github.com',
-      path: `/repos/${REPO_OWNER}/${REPO_NAME}/pulls?state=open`,
+      path: `/repos/${owner}/${name}/pulls?state=open`,
       method: 'GET',
       headers: {
         'User-Agent': 'check-open-prs-script',
@@ -26,7 +47,7 @@ function checkOpenPRs() {
     };
 
     if (GITHUB_TOKEN) {
-      options.headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+      options.headers['Authorization'] = `Bearer ${GITHUB_TOKEN}`;
     }
 
     const req = https.request(options, (res) => {
@@ -59,9 +80,10 @@ function checkOpenPRs() {
 }
 
 async function main() {
-  console.log(`Checking open pull requests for ${REPO_OWNER}/${REPO_NAME}...`);
-  
   try {
+    const { owner, name } = getRepoInfo();
+    console.log(`Checking open pull requests for ${owner}/${name}...`);
+    
     let prs;
     
     if (TEST_MODE) {
@@ -69,7 +91,7 @@ async function main() {
       console.log('(Running in TEST_MODE with mock data)');
       prs = [];
     } else {
-      prs = await checkOpenPRs();
+      prs = await checkOpenPRs(owner, name);
     }
     
     if (prs.length === 0) {

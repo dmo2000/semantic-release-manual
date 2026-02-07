@@ -2,6 +2,10 @@
   "name": "sample-semantic-release-devops",
   "version": "0.0.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dmo2000/semantic-release-manual.git"
+  },
   "scripts": {
     "release": "semantic-release",
     "check-prs": "node check-open-prs.js"
