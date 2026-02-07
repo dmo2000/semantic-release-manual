@@ -15,3 +15,13 @@ This repository demonstrates:
 5. Tag + changelog are created
 
 If validation fails, no tag is created.
+
+## Additional Scripts
+
+### Check Open Pull Requests
+
+Run `npm run check-prs` to check for open pull requests in the repository.
+
+This script can be used locally or in CI/CD pipelines to verify PR status. It requires a `GITHUB_TOKEN` environment variable for authentication when accessing the GitHub API.
+
+For testing without API access, use: `TEST_MODE=true npm run check-prs`
