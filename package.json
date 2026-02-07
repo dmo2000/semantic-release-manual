@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "check-prs": "node check-open-prs.js"
   },
   "devDependencies": {
     "semantic-release": "^23.0.0",
